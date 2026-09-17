@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -5,54 +6,325 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/* ==========================================================================
+   PALETA Y SISTEMA DE DISEÑO OFICIAL SUPERFAST
+   ========================================================================== */
+:root {
+    /* Paleta Oficial */
+    --sf-primary: #FF6B35;         /* Naranja principal: CTAs, acciones destacadas, compras */
+    --sf-primary-hover: #E85822;   /* Naranja hover */
+    --sf-primary-light: #FFF0EB;   /* Naranja sutil para fondos de badges */
+    
+    --sf-secondary: #172554;       /* Azul oscuro: Navbar, footer, encabezados, estructura */
+    --sf-secondary-hover: #1E3A8A; /* Azul hover */
+    --sf-secondary-dark: #0F172A;  /* Tono noche profundo */
+    
+    --sf-accent: #FFB703;          /* Amarillo acento: Estrellas, calificaciones, promociones */
+    --sf-accent-hover: #E5A502;    /* Amarillo hover */
+    
+    --sf-background: #F5F7FA;      /* Fondo general de la plataforma (gris claro neutro) */
+    --sf-white: #FFFFFF;           /* Tarjetas, modales, formularios, contenedores */
+    --sf-text: #1F2937;            /* Texto principal legible */
+    --sf-text-muted: #64748B;      /* Texto secundario / gris medio */
+    --sf-border: #E2E8F0;          /* Bordes limpios y sutiles */
+    
+    /* Semánticos */
+    --sf-success: #10B981;
+    --sf-danger: #EF4444;
+    --sf-warning: #F59E0B;
+    --sf-info: #3B82F6;
+
+    /* Sombras y Radios */
+    --sf-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --sf-shadow-md: 0 4px 14px rgba(23, 37, 84, 0.08);
+    --sf-shadow-lg: 0 10px 25px rgba(23, 37, 84, 0.12);
+    --sf-radius-sm: 8px;
+    --sf-radius-md: 12px;
+    --sf-radius-lg: 16px;
+    --sf-radius-xl: 20px;
+    
+    --sf-font: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+/* ==========================================================================
+   REGLAS GLOBALES
+   ========================================================================== */
+body {
+    background-color: var(--sf-background) !important;
+    color: var(--sf-text) !important;
+    font-family: var(--sf-font) !important;
+    -webkit-font-smoothing: antialiased;
+}
 
-/* =========================
-   ESTILOS PERSONALIZADOS
-========================= */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--sf-secondary);
+    font-weight: 700;
+}
 
-/* Animación tarjetas restaurantes */
+a {
+    color: var(--sf-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--sf-primary-hover);
+}
+
+/* ==========================================================================
+   BOTONES INSTITUCIONALES SUPERFAST
+   ========================================================================== */
+.btn-sf-primary {
+    background-color: var(--sf-primary) !important;
+    color: var(--sf-white) !important;
+    border: none !important;
+    border-radius: var(--sf-radius-sm) !important;
+    font-weight: 600 !important;
+    padding: 0.55rem 1.25rem !important;
+    transition: all 0.2s ease-in-out !important;
+    box-shadow: 0 2px 6px rgba(255, 107, 53, 0.25) !important;
+}
+
+.btn-sf-primary:hover, .btn-sf-primary:focus {
+    background-color: var(--sf-primary-hover) !important;
+    color: var(--sf-white) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.35) !important;
+}
+
+.btn-sf-secondary {
+    background-color: var(--sf-secondary) !important;
+    color: var(--sf-white) !important;
+    border: none !important;
+    border-radius: var(--sf-radius-sm) !important;
+    font-weight: 600 !important;
+    padding: 0.55rem 1.25rem !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.btn-sf-secondary:hover, .btn-sf-secondary:focus {
+    background-color: var(--sf-secondary-hover) !important;
+    color: var(--sf-white) !important;
+    transform: translateY(-1px);
+}
+
+.btn-sf-outline {
+    background-color: var(--sf-white) !important;
+    color: var(--sf-primary) !important;
+    border: 1.5px solid var(--sf-primary) !important;
+    border-radius: var(--sf-radius-sm) !important;
+    font-weight: 600 !important;
+    padding: 0.5rem 1.15rem !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.btn-sf-outline:hover, .btn-sf-outline:focus {
+    background-color: var(--sf-primary) !important;
+    color: var(--sf-white) !important;
+}
+
+.btn-sf-accent {
+    background-color: var(--sf-accent) !important;
+    color: var(--sf-secondary) !important;
+    border: none !important;
+    border-radius: var(--sf-radius-sm) !important;
+    font-weight: 700 !important;
+    padding: 0.55rem 1.25rem !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.btn-sf-accent:hover, .btn-sf-accent:focus {
+    background-color: var(--sf-accent-hover) !important;
+    color: var(--sf-secondary) !important;
+}
+
+/* Compatibilidad suave para utilidades existentes */
+.btn-warning {
+    background-color: var(--sf-primary) !important;
+    border-color: var(--sf-primary) !important;
+    color: var(--sf-white) !important;
+}
+
+.btn-warning:hover {
+    background-color: var(--sf-primary-hover) !important;
+    border-color: var(--sf-primary-hover) !important;
+    color: var(--sf-white) !important;
+}
+
+/* ==========================================================================
+   NAVBAR Y FOOTER INSTITUCIONALES
+   ========================================================================== */
+.sf-navbar {
+    background-color: var(--sf-secondary) !important;
+    border-bottom: 2px solid rgba(255, 107, 53, 0.3) !important;
+    box-shadow: 0 4px 15px rgba(23, 37, 84, 0.15) !important;
+}
+
+.sf-navbar .nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.sf-navbar .nav-link:hover, .sf-navbar .nav-link.active {
+    color: var(--sf-primary) !important;
+}
+
+.sf-footer {
+    background-color: var(--sf-secondary) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.sf-footer a {
+    color: rgba(255, 255, 255, 0.7) !important;
+    transition: color 0.2s ease;
+}
+
+.sf-footer a:hover {
+    color: var(--sf-accent) !important;
+}
+
+/* ==========================================================================
+   TARJETAS Y CONTENEDORES
+   ========================================================================== */
+.sf-card {
+    background-color: var(--sf-white) !important;
+    border: 1px solid var(--sf-border) !important;
+    border-radius: var(--sf-radius-md) !important;
+    box-shadow: var(--sf-shadow-sm) !important;
+    transition: all 0.25s ease-in-out !important;
+}
+
+.sf-card:hover {
+    box-shadow: var(--sf-shadow-md) !important;
+    transform: translateY(-3px);
+}
+
+.sf-card-header {
+    background-color: var(--sf-secondary) !important;
+    color: var(--sf-white) !important;
+    border-bottom: none !important;
+    border-top-left-radius: var(--sf-radius-md) !important;
+    border-top-right-radius: var(--sf-radius-md) !important;
+    padding: 1rem 1.25rem !important;
+}
+
+/* Animación y tarjeta de restaurante */
 .restaurant-card {
-    transition: all 0.3s ease;
+    background-color: var(--sf-white) !important;
+    border: 1px solid var(--sf-border) !important;
+    border-radius: var(--sf-radius-lg) !important;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
     cursor: pointer;
 }
 
 .restaurant-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    transform: translateY(-6px);
+    box-shadow: var(--sf-shadow-lg) !important;
+    border-color: rgba(255, 107, 53, 0.3) !important;
 }
 
+.restaurant-card .card-title {
+    color: var(--sf-secondary);
+    font-weight: 700;
+}
+
+.restaurant-card .card-img-top {
+    height: 180px;
+    object-fit: cover;
+}
+
+/* ==========================================================================
+   FORMULARIOS
+   ========================================================================== */
+.form-control, .form-select {
+    background-color: var(--sf-white) !important;
+    border: 1.5px solid var(--sf-border) !important;
+    border-radius: var(--sf-radius-sm) !important;
+    color: var(--sf-text) !important;
+    padding: 0.65rem 0.9rem !important;
+    font-size: 0.95rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--sf-primary) !important;
+    box-shadow: 0 0 0 3.5px rgba(255, 107, 53, 0.15) !important;
+    outline: none !important;
+}
+
+.form-label {
+    color: var(--sf-text) !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 0.4rem !important;
+}
+
+/* ==========================================================================
+   ELEMENTOS DE ACENTO Y DETALLES
+   ========================================================================== */
+.star-rating {
+    color: var(--sf-accent) !important;
+}
+
+.badge-sf-accent {
+    background-color: var(--sf-accent) !important;
+    color: var(--sf-secondary) !important;
+    font-weight: 700 !important;
+    border-radius: 50px !important;
+    padding: 0.35rem 0.75rem !important;
+}
+
+.badge-sf-primary {
+    background-color: var(--sf-primary-light) !important;
+    color: var(--sf-primary) !important;
+    font-weight: 700 !important;
+    border-radius: 50px !important;
+    padding: 0.35rem 0.75rem !important;
+}
 
 /* Barra de búsqueda estilo app */
-.search-bar{
-    display:flex;
-    align-items:center;
-    background:white;
-    border-radius:50px;
-    padding:8px 15px;
-    max-width:600px;
-    margin:auto;
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: var(--sf-white);
+    border: 1px solid var(--sf-border);
+    border-radius: 50px;
+    padding: 6px 8px 6px 18px;
+    max-width: 620px;
+    margin: auto;
+    box-shadow: var(--sf-shadow-md);
+    transition: box-shadow 0.2s ease;
 }
 
-.search-bar input{
-    border:none;
-    outline:none;
-    flex:1;
-    padding:10px;
+.search-bar:focus-within {
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.25), var(--sf-shadow-md);
+    border-color: var(--sf-primary);
 }
 
-.search-bar button{
-    background:#f59e0b;
-    border:none;
-    color:white;
-    padding:8px 20px;
-    border-radius:30px;
+.search-bar input {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 8px;
+    font-size: 1rem;
+    color: var(--sf-text);
+    background: transparent;
 }
-.card img{
-    height:200px;
-    object-fit:cover;
+
+.search-bar button {
+    background: var(--sf-primary);
+    border: none;
+    color: var(--sf-white);
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 30px;
+    transition: background 0.2s ease;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background: var(--sf-primary-hover);
 }
