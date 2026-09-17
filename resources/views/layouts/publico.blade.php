@@ -55,6 +55,17 @@
                             <i class="bi bi-person-circle" style="color: #FF6B35;"></i>
                             <span>Mi Cuenta</span>
                         </a>
+
+                        @php
+                            $publicCartCount = array_sum(array_column(session('cart', []), 'cantidad'));
+                        @endphp
+                        <a href="{{ route('carrito.index') }}" class="btn btn-outline-light btn-sm position-relative d-inline-flex align-items-center gap-1">
+                            <i class="bi bi-cart3" style="color: #FFB703;"></i>
+                            <span>Carrito</span>
+                            @if($publicCartCount > 0)
+                                <span class="badge rounded-pill bg-danger" style="font-size: 0.7rem;">{{ $publicCartCount }}</span>
+                            @endif
+                        </a>
                     @endif
 
                     <form action="{{ route('logout') }}" method="POST" class="d-inline">

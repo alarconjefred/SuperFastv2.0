@@ -17,6 +17,10 @@
 
 <body style="background-color: var(--sf-background, #F5F7FA); color: var(--sf-text, #1F2937); min-height: 100vh;">
 
+    @php
+        $cartCount = array_sum(array_column(session('cart', []), 'cantidad'));
+    @endphp
+
     <div class="d-flex">
 
         {{-- SIDEBAR INSTITUCIONAL --}}
@@ -41,26 +45,31 @@
 
                     @if(auth()->check() && auth()->user()->role === 'empresa')
                         <li class="nav-item">
-                            <a href="{{ route('empresa.index') }}" class="nav-link text-white rounded px-3 py-2 d-flex align-items-center gap-2" style="background-color: rgba(255, 107, 53, 0.2); border-left: 3px solid #FF6B35;">
+                            <a href="{{ route('empresa.index') }}" class="nav-link {{ request()->routeIs('empresa.*') ? 'text-white' : 'text-white-50' }} rounded px-3 py-2 d-flex align-items-center gap-2" style="{{ request()->routeIs('empresa.*') ? 'background-color: rgba(255, 107, 53, 0.2); border-left: 3px solid #FF6B35;' : '' }}">
                                 <i class="bi bi-shop fs-5" style="color: #FF6B35;"></i>
                                 <span class="fw-bold">Mi Empresa</span>
                             </a>
                         </li>
                     @else
                         <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link text-white rounded px-3 py-2 d-flex align-items-center gap-2" style="background-color: rgba(255, 107, 53, 0.2); border-left: 3px solid #FF6B35;">
+                            <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'text-white' : 'text-white-50' }} rounded px-3 py-2 d-flex align-items-center gap-2" style="{{ request()->routeIs('dashboard') ? 'background-color: rgba(255, 107, 53, 0.2); border-left: 3px solid #FF6B35;' : '' }}">
                                 <i class="bi bi-grid-fill fs-5" style="color: #FF6B35;"></i>
-                                <span class="fw-bold">Restaurantes</span>
+                                <span class="fw-bold">Catálogo</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('carrito.index') }}" class="nav-link {{ request()->routeIs('carrito.*') ? 'text-white' : 'text-white-50' }} rounded px-3 py-2 d-flex align-items-center justify-content-between" style="{{ request()->routeIs('carrito.*') ? 'background-color: rgba(255, 107, 53, 0.2); border-left: 3px solid #FF6B35;' : '' }}">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-cart3 fs-5" style="color: #FFB703;"></i>
+                                    <span class="fw-medium">Mi Carrito</span>
+                                </div>
+                                @if($cartCount > 0)
+                                    <span class="badge rounded-pill" style="background-color: #FF6B35; font-size: 0.72rem; font-weight: 700;">{{ $cartCount }}</span>
+                                @endif
                             </a>
                         </li>
                     @endif
-
-                    <li class="nav-item">
-                        <a href="#" class="nav-link text-white-50 rounded px-3 py-2 d-flex align-items-center gap-2" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.08)'; this.style.color='#FFFFFF'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='rgba(255,255,255,0.5)'">
-                            <i class="bi bi-bag-check fs-5"></i>
-                            <span class="fw-medium">Mis Pedidos</span>
-                        </a>
-                    </li>
                 </ul>
             </div>
 
@@ -95,12 +104,23 @@
             <nav class="navbar bg-white shadow-sm px-4 py-3 border-bottom" style="border-color: #E2E8F0 !important;">
                 <div class="container-fluid d-flex justify-content-between align-items-center">
 
-                    <form class="d-flex w-50 position-relative">
+                    <form class="d-flex w-50 position-relative" action="{{ route('dashboard') }}" method="GET">
                         <i class="bi bi-search position-absolute top-50 translate-middle-y text-muted" style="left: 15px;"></i>
-                        <input class="form-control ps-5" type="search" placeholder="Buscar productos, negocios o comida..." style="background-color: #F8FAFC; border-radius: 50px;">
+                        <input class="form-control ps-5" type="search" name="q" value="{{ request('q') }}" placeholder="Buscar productos en el catálogo..." style="background-color: #F8FAFC; border-radius: 50px; border: 1px solid #E2E8F0;">
                     </form>
 
                     <div class="d-flex align-items-center gap-3">
+                        @if(auth()->check() && auth()->user()->role !== 'empresa')
+                            <a href="{{ route('carrito.index') }}" class="btn btn-light position-relative d-flex align-items-center justify-content-center rounded-circle border shadow-sm" style="width: 42px; height: 42px; background-color: #F8FAFC; border-color: #E2E8F0 !important;" title="Mi Carrito">
+                                <i class="bi bi-cart3 fs-5" style="color: #FF6B35;"></i>
+                                @if($cartCount > 0)
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background-color: #FF6B35; color: #FFFFFF; font-size: 0.7rem; font-weight: 700; border: 2px solid #FFFFFF;">
+                                        {{ $cartCount }}
+                                    </span>
+                                @endif
+                            </a>
+                        @endif
+
                         <div class="text-end">
                             <span class="fw-bold d-block text-dark" style="font-size: 0.95rem;">
                                 {{ auth()->user()->name ?? 'Usuario' }}

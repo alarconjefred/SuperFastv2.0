@@ -1,10 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Models\Producto;
 
 // Inicio
 Route::get('/', function () {
@@ -12,11 +15,26 @@ Route::get('/', function () {
 })->name('inicio');
 
 // Dashboard del cliente (redirige a empresa si tiene ese rol)
-Route::get('/dashboard', function(){
+Route::get('/dashboard', function(Request $request){
     if (auth()->user()->role === 'empresa') {
         return redirect()->route('empresa.index');
     }
-    return view('cliente');
+    
+    $query = Producto::with('empresa');
+
+    if ($request->filled('q')) {
+        $search = $request->input('q');
+        $query->where(function($q) use ($search) {
+            $q->where('nombre', 'like', "%{$search}%")
+              ->orWhere('descripcion', 'like', "%{$search}%")
+              ->orWhereHas('empresa', function($sq) use ($search) {
+                  $sq->where('nombre', 'like', "%{$search}%");
+              });
+        });
+    }
+
+    $productos = $query->latest()->get();
+    return view('cliente', compact('productos'));
 })->middleware('auth')->name('dashboard');
 
 // Registro y login clientes
@@ -35,6 +53,16 @@ Route::get('/empresa', [EmpresaController::class, 'index'])
 // Productos (CRUD) – rutas anidadas para una empresa
 Route::prefix('empresa/{empresa}')->group(function() {
     Route::resource('productos', ProductoController::class);
+});
+
+// Carrito de compras (Clientes autenticados)
+Route::middleware('auth')->group(function () {
+    Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index');
+    Route::post('/carrito/agregar/{producto}', [CarritoController::class, 'agregar'])->name('carrito.agregar');
+    Route::post('/carrito/incrementar/{producto}', [CarritoController::class, 'incrementar'])->name('carrito.incrementar');
+    Route::post('/carrito/decrementar/{producto}', [CarritoController::class, 'decrementar'])->name('carrito.decrementar');
+    Route::delete('/carrito/eliminar/{producto}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
+    Route::post('/carrito/vaciar', [CarritoController::class, 'vaciar'])->name('carrito.vaciar');
 });
 
 // Registro y login empresas
