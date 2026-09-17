@@ -7,11 +7,22 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Models\Producto;
+use App\Models\Empresa;
 
 // Inicio
 Route::get('/', function () {
-    return view('inicio');
+    $empresas = Empresa::with(['productos' => function ($query) {
+        $query->where('disponible', true)->latest();
+    }])
+    ->withCount('productos')
+    ->orderByDesc('productos_count')
+    ->latest()
+    ->take(6)
+    ->get();
+
+    return view('inicio', compact('empresas'));
 })->name('inicio');
 
 // Dashboard del cliente (redirige a empresa si tiene ese rol)
@@ -44,6 +55,10 @@ Route::post('/register', [RegisterController::class, 'store'])->name('register.s
 Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->middleware('throttle:5,1')->name('login.store');
 Route::post('logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
+
+// Autenticación con Google OAuth
+Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('auth.google');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 
 // Panel empresa
 Route::get('/empresa', [EmpresaController::class, 'index'])

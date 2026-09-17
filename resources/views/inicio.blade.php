@@ -116,109 +116,207 @@
     </section>
 
 
-    <!-- RESTAURANTES DESTACADOS -->
-    <section class="container py-5">
+    <!-- SECCIÓN DE COMERCIOS Y EMPRESAS REGISTRADAS -->
+    <section class="container py-5 my-2">
 
-        <div class="d-flex justify-content-between align-items-end mb-4">
+        <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
             <div>
-                <span class="badge px-3 py-2 rounded-pill mb-2" style="background-color: #FFF0EB; color: #FF6B35; font-weight: 700; font-size: 0.8rem;">
-                    SELECCIÓN DESTACADA
+                <span class="badge px-3 py-1.5 rounded-pill mb-2 shadow-xs" style="background-color: #FFF0EB; color: #FF6B35; font-weight: 700; font-size: 0.8rem;">
+                    <i class="bi bi-shop me-1"></i> COMERCIOS ALIADOS EN TU CIUDAD
                 </span>
-                <h2 class="fw-bold mb-0" style="color: #172554;">Restaurantes populares</h2>
+                <h2 class="fw-bold mb-0" style="color: #172554;">Negocios locales registrados</h2>
+                <p class="text-muted small mb-0 mt-1">Descubre restaurantes y emprendimientos locales con despacho express en minutos.</p>
             </div>
-            <a href="{{ route('login') }}" class="fw-bold d-flex align-items-center gap-1" style="color: #FF6B35;">
-                <span>Ver todos</span>
-                <i class="bi bi-chevron-right"></i>
-            </a>
+            
+            @if($empresas->isNotEmpty())
+                @auth
+                    <a href="{{ route('dashboard') }}" class="fw-bold d-flex align-items-center gap-1 text-decoration-none" style="color: #FF6B35;">
+                        <span>Ver catálogo completo</span>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="fw-bold d-flex align-items-center gap-1 text-decoration-none" style="color: #FF6B35;">
+                        <span>Explorar todos</span>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                @endauth
+            @endif
         </div>
 
-        <div class="row g-4">
-
-            <div class="col-md-4">
-                <div class="card sf-card restaurant-card h-100 border-0">
-                    <div class="position-relative">
-                        <img src="{{ asset('img/Productos/Pizza.png') }}" class="card-img-top" alt="Pizza Express">
-                        <span class="badge position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill" style="background-color: #172554; color: #FFFFFF; font-size: 0.75rem;">
-                            🍕 Italiana
-                        </span>
+        @if($empresas->isEmpty())
+            <!-- ESTADO ALTERNATIVO: CUANDO NO EXISTEN EMPRESAS REGISTRADAS (CASO 1) -->
+            <div class="card sf-card border-0 shadow-sm rounded-4 p-5 text-center my-3 position-relative overflow-hidden" style="background-color: #FFFFFF; border: 1.5px dashed #CBD5E1 !important;">
+                <div class="py-4 my-2">
+                    <div class="d-inline-flex p-3 rounded-4 bg-light shadow-xs border border-light mb-4 position-relative">
+                        <img src="{{ asset('img/Logos/Logo principal.jpeg') }}" 
+                             alt="SuperFast" 
+                             style="max-height: 85px; width: auto; object-fit: contain;" 
+                             class="rounded-2">
+                        <span class="sf-pulse-dot position-absolute top-0 end-0 m-2" style="background-color: #FF6B35;"></span>
                     </div>
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center gap-1 mb-2">
-                            <span style="color: #FFB703;">★★★★★</span>
-                            <span class="fw-bold small ms-1" style="color: #172554;">4.9</span>
-                            <span class="text-muted small">(120+ reseñas)</span>
-                        </div>
-                        <h5 class="card-title fw-bold" style="color: #172554;">Pizza Express</h5>
-                        <p class="card-text text-muted small mb-3">Pizzas artesanales al horno de leña y comida italiana de primera calidad.</p>
-                        <div class="d-flex justify-content-between align-items-center pt-2 border-top border-light">
-                            <span class="small fw-semibold text-muted">
-                                <i class="bi bi-clock text-warning"></i> 25-35 min
-                            </span>
-                            <a href="{{ route('login') }}" class="btn btn-sf-primary btn-sm px-3">
-                                Pedir ahora
-                            </a>
-                        </div>
+
+                    <h4 class="fw-bold mb-2" style="color: #172554;">Próximamente comercios en tu zona</h4>
+                    <p class="text-muted mx-auto mb-4" style="max-width: 520px; font-size: 0.95rem;">
+                        Estamos sumando a los mejores restaurantes, panaderías y tiendas locales de tu ciudad. Muy pronto podrás ordenar tus productos favoritos con entregas en minutos.
+                    </p>
+
+                    <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
+                        <a href="{{ route('register.empresa') }}" class="btn btn-sf-primary px-4 py-2.5 fw-bold rounded-3 shadow-sm d-inline-flex align-items-center gap-2">
+                            <i class="bi bi-shop"></i>
+                            <span>Registrar mi Empresa</span>
+                        </a>
+                        <a href="{{ route('register') }}" class="btn btn-outline-secondary px-4 py-2.5 fw-semibold rounded-3 d-inline-flex align-items-center gap-2">
+                            <i class="bi bi-bell"></i>
+                            <span>Crear cuenta de cliente</span>
+                        </a>
                     </div>
                 </div>
             </div>
+        @else
+            <!-- CUADRÍCULA DE EMPRESAS Y PRODUCTOS REALES DE LA BASE DE DATOS -->
+            <div class="row g-4 row-cols-1 row-cols-md-2 row-cols-lg-3">
+                @foreach($empresas as $empresa)
+                    <div class="col">
+                        <div class="card sf-card h-100 border-0 shadow-sm rounded-4 overflow-hidden d-flex flex-column bg-white">
+                            
+                            <!-- Encabezado de la Empresa -->
+                            <div class="p-3 px-4 bg-light border-bottom d-flex align-items-center justify-content-between gap-2" style="border-color: #F1F5F9 !important;">
+                                <div class="d-flex align-items-center gap-2.5 min-w-0">
+                                    <!-- Logo o Iniciales Estilizadas de la Empresa (Caso 5) -->
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-xs flex-shrink-0" 
+                                         style="width: 42px; height: 42px; background: linear-gradient(135deg, #172554 0%, #1E3A8A 100%); font-size: 0.88rem; letter-spacing: 0.05em;">
+                                        {{ $empresa->iniciales }}
+                                    </div>
+                                    
+                                    <div class="min-w-0">
+                                        <h5 class="fw-bold mb-0 text-truncate text-dark" title="{{ $empresa->nombre }}" style="font-size: 1.05rem;">
+                                            {{ $empresa->nombre }}
+                                        </h5>
+                                        <!-- Información Opcional de la Empresa (Caso 6) -->
+                                        @if($empresa->direccion)
+                                            <small class="text-muted text-truncate d-block" style="font-size: 0.74rem;">
+                                                <i class="bi bi-geo-alt-fill text-warning"></i> {{ $empresa->direccion }}
+                                            </small>
+                                        @else
+                                            <small class="text-success fw-semibold d-block" style="font-size: 0.74rem;">
+                                                <i class="bi bi-patch-check-fill"></i> Comercio Aliado Verificado
+                                            </small>
+                                        @endif
+                                    </div>
+                                </div>
 
-            <div class="col-md-4">
-                <div class="card sf-card restaurant-card h-100 border-0">
-                    <div class="position-relative">
-                        <img src="{{ asset('img/Productos/Burger2.png') }}" class="card-img-top" alt="Burger House">
-                        <span class="badge position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill" style="background-color: #172554; color: #FFFFFF; font-size: 0.75rem;">
-                            🍔 Burgers
-                        </span>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center gap-1 mb-2">
-                            <span style="color: #FFB703;">★★★★★</span>
-                            <span class="fw-bold small ms-1" style="color: #172554;">4.8</span>
-                            <span class="text-muted small">(95+ reseñas)</span>
+                                <!-- Contador de Productos -->
+                                <span class="badge rounded-pill bg-white border text-secondary shadow-2xs small px-2.5 py-1 flex-shrink-0" style="font-size: 0.72rem;">
+                                    {{ $empresa->productos->count() }} {{ $empresa->productos->count() === 1 ? 'producto' : 'productos' }}
+                                </span>
+                            </div>
+
+                            <!-- Cuerpo de la Tarjeta con Producto Publicado -->
+                            <div class="card-body p-3 p-sm-4 d-flex flex-column flex-grow-1">
+                                @if($empresa->productos->isNotEmpty())
+                                    @php
+                                        // Obtener el producto publicado más reciente
+                                        $producto = $empresa->productos->first();
+                                    @endphp
+
+                                    <!-- Imagen del Producto (Ratio fijo, fallback institucional Caso 4) -->
+                                    <div class="position-relative rounded-3 overflow-hidden mb-3 bg-light border shadow-2xs" style="height: 180px;">
+                                        <img src="{{ $producto->imagen_url }}" 
+                                             alt="{{ $producto->nombre }}" 
+                                             class="w-100 h-100 object-fit-cover">
+                                        
+                                        <!-- Badge de Disponibilidad y Stock -->
+                                        @if($producto->esta_agotado)
+                                            <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2.5 py-1 rounded-pill small fw-bold shadow-xs">
+                                                <i class="bi bi-x-circle me-1"></i> Agotado
+                                            </span>
+                                        @else
+                                            <span class="badge bg-success position-absolute top-0 end-0 m-2 px-2.5 py-1 rounded-pill small fw-bold shadow-xs">
+                                                <i class="bi bi-check-circle me-1"></i> En Stock ({{ $producto->stock }})
+                                            </span>
+                                        @endif
+
+                                        <span class="badge bg-dark bg-opacity-75 text-white position-absolute bottom-0 start-0 m-2 px-2 py-0.5 rounded small" style="font-size: 0.68rem;">
+                                            <i class="bi bi-tag-fill text-warning me-1"></i> Plato / Producto
+                                        </span>
+                                    </div>
+
+                                    <!-- Datos del Producto -->
+                                    <div class="mb-3 flex-grow-1">
+                                        <h6 class="fw-bold mb-1 text-truncate" style="color: #172554; font-size: 0.98rem;" title="{{ $producto->nombre }}">
+                                            {{ $producto->nombre }}
+                                        </h6>
+                                        <p class="small text-muted mb-0" style="font-size: 0.8rem; line-height: 1.4;">
+                                            {{ Str::limit($producto->descripcion ?? 'Producto disponible para despacho express en tu ciudad.', 65) }}
+                                        </p>
+                                    </div>
+
+                                    <!-- Precio y Acción -->
+                                    <div class="d-flex justify-content-between align-items-center pt-2.5 border-top border-light mt-auto">
+                                        <div>
+                                            <span class="small text-muted d-block" style="font-size: 0.7rem; letter-spacing: 0.04em;">PRECIO</span>
+                                            <span class="fw-bold fs-5" style="color: #FF6B35;">$ {{ number_format($producto->precio, 0, ',', '.') }}</span>
+                                        </div>
+
+                                        @auth
+                                            @if(auth()->user()->role === 'empresa')
+                                                <a href="{{ route('empresa.index') }}" class="btn btn-outline-sf-secondary btn-sm px-3 fw-bold d-inline-flex align-items-center gap-1">
+                                                    <span>Mi Panel</span>
+                                                </a>
+                                            @else
+                                                <a href="{{ route('dashboard', ['q' => $producto->nombre]) }}" class="btn btn-sf-primary btn-sm px-3 fw-bold d-inline-flex align-items-center gap-1 shadow-xs">
+                                                    <i class="bi bi-bag-plus"></i>
+                                                    <span>Pedir</span>
+                                                </a>
+                                            @endif
+                                        @else
+                                            <a href="{{ route('login') }}" class="btn btn-sf-primary btn-sm px-3 fw-bold d-inline-flex align-items-center gap-1 shadow-xs">
+                                                <span>Pedir ahora</span>
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+                                        @endauth
+                                    </div>
+
+                                @else
+                                    <!-- CASO 2: EMPRESA REGISTRADA SIN PRODUCTOS PUBLICADOS -->
+                                    <div class="rounded-3 p-4 text-center bg-light border border-dashed my-auto d-flex flex-column align-items-center justify-content-center" style="min-height: 190px;">
+                                        <div class="rounded-circle p-2.5 mb-2 bg-white shadow-xs text-muted">
+                                            <i class="bi bi-box-seam fs-4" style="color: #FFB703;"></i>
+                                        </div>
+                                        <h6 class="fw-bold text-dark mb-1 small">Menú en preparación</h6>
+                                        <p class="small text-muted mb-0" style="font-size: 0.76rem; max-width: 200px;">
+                                            Este negocio aliado está configurando su catálogo para recibir órdenes.
+                                        </p>
+                                    </div>
+
+                                    <div class="pt-3 border-top border-light mt-3 text-center">
+                                        <span class="badge bg-white text-muted border px-2.5 py-1 small" style="font-size: 0.72rem;">
+                                            <i class="bi bi-clock me-1"></i> Disponible próximamente
+                                        </span>
+                                    </div>
+                                @endif
+                            </div>
+
                         </div>
-                        <h5 class="card-title fw-bold" style="color: #172554;">Burger House</h5>
-                        <p class="card-text text-muted small mb-3">Hamburguesas gourmet 100% carne de res, quesos fundidos y papas rústicas.</p>
-                        <div class="d-flex justify-content-between align-items-center pt-2 border-top border-light">
-                            <span class="small fw-semibold text-muted">
-                                <i class="bi bi-clock text-warning"></i> 20-30 min
-                            </span>
-                            <a href="{{ route('login') }}" class="btn btn-sf-primary btn-sm px-3">
-                                Pedir ahora
-                            </a>
-                        </div>
                     </div>
-                </div>
+                @endforeach
             </div>
 
-            <div class="col-md-4">
-                <div class="card sf-card restaurant-card h-100 border-0">
-                    <div class="position-relative">
-                        <img src="{{ asset('img/Productos/Sushi.png') }}" class="card-img-top" alt="Sushi Go">
-                        <span class="badge position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill" style="background-color: #172554; color: #FFFFFF; font-size: 0.75rem;">
-                            🍣 Japonesa
-                        </span>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center gap-1 mb-2">
-                            <span style="color: #FFB703;">★★★★★</span>
-                            <span class="fw-bold small ms-1" style="color: #172554;">5.0</span>
-                            <span class="text-muted small">(150+ reseñas)</span>
-                        </div>
-                        <h5 class="card-title fw-bold" style="color: #172554;">Sushi Go</h5>
-                        <p class="card-text text-muted small mb-3">Rolls frescos, nigiris y combinados orientales preparados al momento.</p>
-                        <div class="d-flex justify-content-between align-items-center pt-2 border-top border-light">
-                            <span class="small fw-semibold text-muted">
-                                <i class="bi bi-clock text-warning"></i> 30-40 min
-                            </span>
-                            <a href="{{ route('login') }}" class="btn btn-sf-primary btn-sm px-3">
-                                Pedir ahora
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            <!-- CASO 7: ENLACE PARA EXPLORAR MÁS CUANDO HAY VARIOS COMERCIOS -->
+            <div class="text-center mt-4 pt-2">
+                @auth
+                    <a href="{{ route('dashboard') }}" class="btn btn-outline-sf-primary px-4 py-2.5 fw-bold rounded-pill shadow-xs d-inline-flex align-items-center gap-2">
+                        <span>Explorar todos los comercios y platillos</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-outline-sf-primary px-4 py-2.5 fw-bold rounded-pill shadow-xs d-inline-flex align-items-center gap-2">
+                        <span>Inicia sesión para ver todos los comercios</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                @endauth
             </div>
-
-        </div>
+        @endif
 
     </section>
 

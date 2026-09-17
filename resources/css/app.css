@@ -328,3 +328,96 @@ a:hover {
 .search-bar button:hover {
     background: var(--sf-primary-hover);
 }
+
+/* ==========================================================================
+   UTILIDADES RESPONSIVAS Y COMPONENTES STITCH
+   ========================================================================== */
+
+/* Pulso animado para indicadores de estado en vivo */
+@keyframes sf-pulse-glow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(1.2); }
+}
+
+.sf-pulse-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: sf-pulse-glow 2s infinite ease-in-out;
+}
+
+/* Ocultar barra de scroll en carruseles de categorías horizontales */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Dropzone de subida moderna inspirada en Stitch */
+.sf-dropzone {
+    border: 2px dashed #CBD5E1;
+    border-radius: 14px;
+    background-color: #F8FAFC;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.sf-dropzone:hover {
+    border-color: var(--sf-primary);
+    background-color: #FFF0EB;
+}
+
+/* Barra de navegación móvil inferior (Bottom App Bar) */
+.sf-mobile-bottom-nav {
+    display: none;
+}
+
+@media (max-width: 991.98px) {
+    .sf-mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 62px;
+        background: #FFFFFF;
+        border-top: 1px solid #E2E8F0;
+        z-index: 1040;
+        box-shadow: 0 -4px 16px rgba(23, 37, 84, 0.08);
+        align-items: center;
+        justify-content: space-around;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .sf-mobile-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #64748B;
+        text-decoration: none;
+        font-size: 0.7rem;
+        font-weight: 600;
+        gap: 2px;
+        flex: 1;
+        transition: color 0.15s ease;
+    }
+
+    .sf-mobile-nav-item.active, .sf-mobile-nav-item:hover {
+        color: var(--sf-primary);
+    }
+
+    .sf-mobile-nav-item i {
+        font-size: 1.25rem;
+        line-height: 1;
+    }
+
+    /* Padding de seguridad para que el contenido inferior no quede tapado por la barra móvil */
+    .sf-mobile-padded-bottom {
+        padding-bottom: 85px !important;
+    }
+}
+

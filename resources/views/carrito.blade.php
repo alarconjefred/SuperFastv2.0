@@ -41,14 +41,14 @@
         </div>
     @endif
 
-    <!-- Encabezado -->
+    <!-- Encabezado con Botón Seguir Comprando -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
-            <h2 class="fw-bold mb-1" style="color: #172554;">Mi Carrito de Compras</h2>
-            <p class="text-muted mb-0">Revisa tus artículos seleccionados antes de confirmar el pedido</p>
+            <h2 class="fw-bold mb-1" style="color: #172554; font-size: clamp(1.3rem, 2.5vw, 1.85rem);">Mi Carrito de Compras</h2>
+            <p class="text-muted small mb-0">Revisa tus artículos seleccionados y finaliza tu pedido</p>
         </div>
 
-        <a href="{{ route('dashboard') }}" class="btn btn-sf-secondary d-flex align-items-center gap-2">
+        <a href="{{ route('dashboard') }}" class="btn btn-sf-secondary btn-sm px-3 py-2 d-flex align-items-center gap-2 shadow-xs">
             <i class="bi bi-arrow-left"></i>
             <span>Seguir comprando</span>
         </a>
@@ -64,7 +64,7 @@
             </div>
             <h3 class="fw-bold" style="color: #172554;">Tu carrito está vacío</h3>
             <p class="text-muted mx-auto mb-4" style="max-width: 450px;">
-                Aún no has añadido ningún producto delicioso a tu pedido. Explora nuestro catálogo y aprovecha el despacho rápido.
+                Aún no has añadido ningún producto a tu pedido. Explora nuestro catálogo y aprovecha las mejores opciones gastronómicas.
             </p>
             <div>
                 <a href="{{ route('dashboard') }}" class="btn btn-sf-primary px-4 py-2">
@@ -75,7 +75,7 @@
     @else
         <div class="row g-4">
 
-            <!-- Lista de Productos en el Carrito -->
+            <!-- Columna Izquierda: Lista de Productos en el Carrito (Adaptable Desktop / Mobile) -->
             <div class="col-lg-8">
                 <div class="card sf-card border-0 shadow-sm rounded-4 overflow-hidden" style="background-color: #FFFFFF; border: 1px solid #E2E8F0;">
                     <div class="card-header text-white py-3 px-4 d-flex justify-content-between align-items-center" style="background-color: #172554;">
@@ -87,19 +87,20 @@
                         <!-- Botón Vaciar Carrito -->
                         <form action="{{ route('carrito.vaciar') }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas vaciar todo el carrito?');">
                             @csrf
-                            <button type="submit" class="btn btn-sm btn-outline-light text-white-50 border-0" onmouseover="this.style.color='#EF4444'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" title="Vaciar todo el carrito">
-                                <i class="bi bi-trash3 me-1"></i> Vaciar Carrito
+                            <button type="submit" class="btn btn-sm btn-outline-light text-white-50 border-0 py-0" onmouseover="this.style.color='#EF4444'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" title="Vaciar todo el carrito">
+                                <i class="bi bi-trash3 me-1"></i> Vaciar
                             </button>
                         </form>
                     </div>
 
                     <div class="card-body p-0">
-                        <div class="table-responsive">
+                        <!-- Vista Desktop: Tabla tradicional -->
+                        <div class="table-responsive d-none d-md-block">
                             <table class="table align-middle mb-0">
                                 <thead class="table-light text-muted small text-uppercase">
                                     <tr>
                                         <th class="ps-4" style="min-width: 240px;">Producto</th>
-                                        <th class="text-center" style="min-width: 100px;">Precio Unit.</th>
+                                        <th class="text-center" style="min-width: 100px;">Precio</th>
                                         <th class="text-center" style="min-width: 140px;">Cantidad</th>
                                         <th class="text-end" style="min-width: 110px;">Subtotal</th>
                                         <th class="text-center pe-4" style="width: 50px;"></th>
@@ -120,7 +121,7 @@
                                                             <i class="bi bi-shop me-1" style="color: #FF6B35;"></i> {{ $item['empresa_nombre'] }}
                                                         </span>
                                                         <span class="small text-secondary" style="font-size: 0.72rem;">
-                                                            Stock disp: {{ $item['stock'] }} unid.
+                                                            Stock: {{ $item['stock'] }} unid.
                                                         </span>
                                                     </div>
                                                 </div>
@@ -158,11 +159,6 @@
                                                         </button>
                                                     </form>
                                                 </div>
-                                                @if($item['cantidad'] >= $item['stock'])
-                                                    <div class="small text-danger fw-semibold mt-1" style="font-size: 0.68rem;">
-                                                        Máximo disponible
-                                                    </div>
-                                                @endif
                                             </td>
 
                                             <!-- Subtotal -->
@@ -187,13 +183,65 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Vista Móvil: Tarjetas Apiladas (Zero scroll horizontal) -->
+                        <div class="d-md-none p-3 d-flex flex-column gap-3">
+                            @foreach($cart as $id => $item)
+                                <div class="border rounded-3 p-3 bg-white shadow-xs position-relative">
+                                    <div class="d-flex gap-3">
+                                        <div style="width: 72px; height: 72px; border-radius: 10px; overflow: hidden; border: 1px solid #E2E8F0; background: #F8FAFC; flex-shrink: 0;">
+                                            <img src="{{ $item['imagen_url'] }}" alt="{{ $item['nombre'] }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                        </div>
+                                        <div class="flex-grow-1 min-w-0 pe-4">
+                                            <h6 class="fw-bold text-dark mb-1 text-truncate">{{ $item['nombre'] }}</h6>
+                                            <div class="small text-muted mb-1">
+                                                <i class="bi bi-shop text-warning"></i> {{ $item['empresa_nombre'] }}
+                                            </div>
+                                            <div class="fw-bold" style="color: #FF6B35; font-size: 1.05rem;">
+                                                ${{ number_format($item['precio'] * $item['cantidad'], 2) }}
+                                                <small class="text-muted fw-normal" style="font-size: 0.75rem;">(${{ number_format($item['precio'], 2) }} c/u)</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Botón Eliminar Móvil -->
+                                    <form action="{{ route('carrito.eliminar', $id) }}" method="POST" class="position-absolute top-0 end-0 m-3" onsubmit="return confirm('¿Quitar del carrito?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm text-danger p-0 border-0">
+                                            <i class="bi bi-trash3 fs-5"></i>
+                                        </button>
+                                    </form>
+
+                                    <!-- Controles Móviles de Cantidad -->
+                                    <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                                        <span class="small text-muted">Stock: {{ $item['stock'] }} unid.</span>
+                                        <div class="d-inline-flex align-items-center rounded-3 border p-1" style="background-color: #F8FAFC;">
+                                            <form action="{{ route('carrito.decrementar', $id) }}" method="POST" class="m-0">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-light border-0 px-2.5 py-1 text-dark">
+                                                    <i class="bi bi-dash"></i>
+                                                </button>
+                                            </form>
+                                            <span class="fw-bold px-3 text-dark">{{ $item['cantidad'] }}</span>
+                                            <form action="{{ route('carrito.incrementar', $id) }}" method="POST" class="m-0">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-light border-0 px-2.5 py-1 text-dark" {{ $item['cantidad'] >= $item['stock'] ? 'disabled' : '' }}>
+                                                    <i class="bi bi-plus"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Resumen de Compra -->
+            <!-- Columna Derecha: Resumen de Compra (Sticky en Desktop) -->
             <div class="col-lg-4">
-                <div class="card sf-card border-0 shadow-sm rounded-4 overflow-hidden" style="background-color: #FFFFFF; border: 1px solid #E2E8F0;">
+                <div class="card sf-card border-0 shadow-sm rounded-4 overflow-hidden position-sticky" style="background-color: #FFFFFF; border: 1px solid #E2E8F0; top: 85px;">
                     <div class="card-header text-white py-3 px-4" style="background-color: #172554;">
                         <h5 class="mb-0 fw-bold fs-6 d-flex align-items-center gap-2">
                             <i class="bi bi-receipt" style="color: #FFB703;"></i>
@@ -228,7 +276,7 @@
                             <span class="fw-bold">Proceder al Pago</span>
                         </button>
 
-                        <!-- Sellos de Confianza y Calidad -->
+                        <!-- Sellos de Confianza y Calidad (Stitch Pattern) -->
                         <div class="mt-4 pt-3 border-top border-light">
                             <div class="d-flex align-items-center gap-2 text-muted small mb-2">
                                 <i class="bi bi-shield-check text-success fs-5"></i>
@@ -236,7 +284,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-2 text-muted small mb-2">
                                 <i class="bi bi-lightning-charge text-warning fs-5"></i>
-                                <span>Entrega exprés en minutos</span>
+                                <span>Entrega exprés en 25-35 min</span>
                             </div>
                             <div class="d-flex align-items-center gap-2 text-muted small">
                                 <i class="bi bi-headset text-primary fs-5"></i>
