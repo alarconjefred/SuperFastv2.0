@@ -1,0 +1,58 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+
+/* =========================
+   ESTILOS PERSONALIZADOS
+========================= */
+
+/* Animación tarjetas restaurantes */
+.restaurant-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.restaurant-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+
+/* Barra de búsqueda estilo app */
+.search-bar{
+    display:flex;
+    align-items:center;
+    background:white;
+    border-radius:50px;
+    padding:8px 15px;
+    max-width:600px;
+    margin:auto;
+}
+
+.search-bar input{
+    border:none;
+    outline:none;
+    flex:1;
+    padding:10px;
+}
+
+.search-bar button{
+    background:#f59e0b;
+    border:none;
+    color:white;
+    padding:8px 20px;
+    border-radius:30px;
+}
+.card img{
+    height:200px;
+    object-fit:cover;
+}
