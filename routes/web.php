@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Models\Producto;
 use App\Models\Empresa;
+use App\Http\Controllers\ChatbotController;
 
 // Inicio
 Route::get('/', function () {
@@ -86,3 +87,7 @@ Route::post('/register-empresa', [EmpresaController::class, 'store'])->name('reg
 
 Route::get('/login-empresa', [LoginController::class,'createEmpresa'])->name('login.empresa');
 Route::post('/login-empresa', [LoginController::class, 'loginEmpresa'])->name('login.empresa.store');
+// Chatbot Asistente Virtual (Proxy seguro autenticado hacia Vercel)
+Route::post('/chatbot/message', [ChatbotController::class, 'sendMessage'])
+    ->middleware('throttle:chatbot')
+    ->name('chatbot.message');

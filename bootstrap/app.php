@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Confía en los proxies inversos de Render para terminación SSL, IPs reales y cookies seguras
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'isEmpresa' => \App\Http\Middleware\IsEmpresa::class,
         ]);

@@ -35,6 +35,12 @@ return [
         ],
     ],
 
+    'chatbot' => [
+        'url' => env('CHATBOT_VERCEL_URL', 'https://chat-bot-ten-sage.vercel.app/api/chat'),
+        'token' => env('CHATBOT_SERVICE_TOKEN'),
+        'bypass_secret' => env('VERCEL_AUTOMATION_BYPASS_SECRET'),
+    ],
+
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
