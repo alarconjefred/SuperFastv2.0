@@ -35,6 +35,14 @@ RUN apk add --no-cache \
     sed \
     dos2unix
 
+# Garantizar que www-data pertenezca al grupo GID 1000 de forma idempotente (Render Secret Files)
+RUN GRP=$(awk -F: '$3 == 1000 {print $1}' /etc/group) && \
+    if [ -z "$GRP" ]; then addgroup -g 1000 render && GRP="render"; fi && \
+    if ! id -G -n www-data | grep -qw "$GRP"; then addgroup www-data "$GRP"; fi && \
+    if ! id -G www-data | grep -qw "1000"; then \
+        echo "ERROR: Falló la asignación del GID 1000 al usuario www-data." >&2; exit 1; \
+    fi
+
 # Instalar instalador oficial de extensiones PHP de Docker
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 

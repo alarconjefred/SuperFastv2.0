@@ -5,6 +5,9 @@ vendor
 .env
 .env.*
 storage/*.key
+ca.pem
+*.pem
+*.crt
 tests
 cambios_superfast.patch
 DECLARACION_PERSONA_TRANSHUMANA.md
