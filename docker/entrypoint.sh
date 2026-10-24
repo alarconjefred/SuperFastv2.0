@@ -15,15 +15,25 @@ fi
 
 # Asegurar que Nginx ejecute bajo el usuario www-data igual que PHP-FPM
 if [ -f /etc/nginx/nginx.conf ]; then
-    sed -i "s/user nginx;/user www-data;/g" /etc/nginx/nginx.conf
+    sed -i -E '/^[#[:space:]]*user[[:space:]]+/d' /etc/nginx/nginx.conf
+    sed -i '1s/^/user www-data www-data;\n/' /etc/nginx/nginx.conf
 fi
 
-# Asegurar directorios temporales de Nginx con permisos mínimos para www-data (modo 700)
+# Asegurar directorios temporales de Nginx con permisos mínimos para www-data
 mkdir -p /var/lib/nginx/tmp/client_body \
          /var/lib/nginx/tmp/proxy \
-         /var/lib/nginx/tmp/fastcgi
-chown -R www-data:www-data /var/lib/nginx/tmp /var/log/nginx
+         /var/lib/nginx/tmp/fastcgi \
+         /var/log/nginx
+chown -R www-data:www-data /var/lib/nginx /var/log/nginx
+chmod 755 /var/lib/nginx /var/log/nginx
 chmod -R 700 /var/lib/nginx/tmp
+
+# Validar sintaxis de configuración de Nginx antes de continuar
+echo "==> [SuperFast] Validando configuración de Nginx..."
+if ! nginx -t; then
+    echo "==> [SuperFast] [ERROR CRÍTICO] La configuración de Nginx es inválida. Deteniendo arranque." >&2
+    exit 1
+fi
 
 # 2. Asegurar existencia de directorios de almacenamiento y caché
 mkdir -p storage/framework/cache/data \
@@ -141,6 +151,26 @@ fi
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
-# 11. Iniciar supervisor para gestionar Nginx y PHP-FPM en primer plano
+# 11. Diagnóstico seguro de configuración y permisos de Nginx para logs de Render
+echo "==> [SuperFast] [Diagnóstico Nginx] Usuario efectivo de arranque: $(id -u -n) (UID: $(id -u), GID: $(id -g))"
+echo "==> [SuperFast] [Diagnóstico Nginx] Permisos de directorios de Nginx:"
+ls -ld /var/lib/nginx /var/lib/nginx/tmp /var/lib/nginx/tmp/client_body /var/log/nginx 2>/dev/null || true
+echo "==> [SuperFast] [Diagnóstico Nginx] Directivas de usuario y buffer en configuración Nginx:"
+nginx -T 2>&1 | grep -E "^[[:space:]]*(user|client_body_temp_path|error_log|client_max_body_size)\b" || true
+if su -s /bin/sh www-data -c "touch /var/lib/nginx/tmp/client_body/.probe_www && rm -f /var/lib/nginx/tmp/client_body/.probe_www" 2>/dev/null; then
+    echo "==> [SuperFast] [Diagnóstico Nginx] Prueba escritura www-data en client_body: CORRECTO"
+else
+    echo "==> [SuperFast] [ERROR CRÍTICO] El usuario www-data no tiene permisos de escritura en /var/lib/nginx/tmp/client_body. Deteniendo arranque." >&2
+    exit 1
+fi
+
+# Monitoreo asíncrono no invasivo para registrar usuarios de procesos master y worker tras arranque
+(
+    sleep 3
+    echo "==> [SuperFast] [Diagnóstico Nginx] Procesos Nginx activos:"
+    ps -o pid,user,group,args 2>/dev/null || ps aux | grep -E "nginx: (master|worker)" || true
+) &
+
+# 12. Iniciar supervisor para gestionar Nginx y PHP-FPM en primer plano
 echo "==> [SuperFast] Servidor listo. Iniciando PHP-FPM y Nginx..."
 exec supervisord -c /etc/supervisor/conf.d/supervisord.conf

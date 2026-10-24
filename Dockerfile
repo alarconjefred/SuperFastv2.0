@@ -89,8 +89,9 @@ RUN dos2unix /usr/local/bin/entrypoint.sh && chmod +x /usr/local/bin/entrypoint.
 # Ajustar permisos para www-data en storage, cache y directorios temporales de Nginx
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache \
-    && mkdir -p /var/lib/nginx/tmp/client_body /var/lib/nginx/tmp/proxy /var/lib/nginx/tmp/fastcgi \
-    && chown -R www-data:www-data /var/lib/nginx/tmp /var/log/nginx \
+    && mkdir -p /var/lib/nginx/tmp/client_body /var/lib/nginx/tmp/proxy /var/lib/nginx/tmp/fastcgi /var/log/nginx \
+    && chown -R www-data:www-data /var/lib/nginx /var/log/nginx \
+    && chmod 755 /var/lib/nginx /var/log/nginx \
     && chmod -R 700 /var/lib/nginx/tmp
 
 # Puerto por defecto expuesto (Render asigna la variable $PORT)
