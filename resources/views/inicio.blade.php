@@ -26,15 +26,15 @@
                         Encuentra tus restaurantes y comercios locales favoritos y recibe tu pedido directamente en tu puerta con total confianza.
                     </p>
 
-                    <!-- BUSCADOR INSTITUCIONAL -->
-                    <div class="search-bar mt-4">
+                    <!-- BUSCADOR INSTITUCIONAL FUNCIONAL -->
+                    <form action="{{ route('dashboard') }}" method="GET" class="search-bar mt-4 ms-0">
                         <i class="bi bi-search text-muted fs-5 me-2"></i>
-                        <input type="text" placeholder="Buscar restaurante, comida o producto...">
-                        <button type="button" class="btn-sf-primary d-flex align-items-center gap-2">
+                        <input type="text" name="q" placeholder="Buscar restaurante, comida o producto..." autocomplete="off">
+                        <button type="submit" class="btn-sf-primary d-flex align-items-center gap-2">
                             <span>Buscar</span>
                             <i class="bi bi-arrow-right"></i>
                         </button>
-                    </div>
+                    </form>
 
                     <div class="d-flex align-items-center gap-4 mt-4 text-white-50 small">
                         <div class="d-flex align-items-center gap-1">

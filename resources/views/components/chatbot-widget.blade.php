@@ -8,11 +8,11 @@
                 <div class="sf-chatbot-avatar">
                     <img src="{{ asset('img/Iconos/Version compacta.jpg') }}" alt="SuperFast" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <span class="sf-chatbot-avatar-fallback" style="display:none;">SF</span>
-                    <span class="sf-chatbot-status-dot" title="En lÃ­nea"></span>
+                    <span class="sf-chatbot-status-dot" title="En línea"></span>
                 </div>
                 <div>
                     <h3 class="sf-chatbot-title">SuperFast Bot</h3>
-                    <p class="sf-chatbot-subtitle">Asistente IA â€¢ Conectado a Vercel</p>
+                    <p class="sf-chatbot-subtitle">Asistente IA • En línea</p>
                 </div>
             </div>
             <div class="sf-chatbot-header-actions">
@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        {{-- Alerta informativa en caso de error o aviso de configuracin --}}
+        {{-- Alerta informativa en caso de error o aviso de configuración --}}
         <div id="sf-chatbot-banner" class="sf-chatbot-banner sf-hidden">
             <i class="bi bi-info-circle-fill me-1"></i>
             <span id="sf-chatbot-banner-text"></span>
@@ -36,33 +36,33 @@
             {{-- Mensaje de bienvenida inicial del Asistente --}}
             <div class="sf-chat-msg sf-chat-msg-bot">
                 <div class="sf-chat-bubble">
-                    <p class="mb-1"><strong>Â¡Hola! ðŸ‘‹ Bienvenido a SuperFast.</strong></p>
-                    <p class="mb-0">Soy tu asistente virtual impulsado por inteligencia artificial. Â¿En quÃ© puedo orientarte hoy sobre comercios, pedidos o cÃ³mo funciona la plataforma?</p>
+                    <p class="mb-1"><strong>¡Hola! 👋 Bienvenido a SuperFast.</strong></p>
+                    <p class="mb-0">Soy tu asistente virtual impulsado por inteligencia artificial. ¿En qué puedo orientarte hoy sobre comercios, pedidos o cómo funciona la plataforma?</p>
                 </div>
                 <span class="sf-chat-time">{{ date('H:i') }}</span>
             </div>
         </div>
 
-        {{-- Pldoras de sugerencias rpidas --}}
+        {{-- Píldoras de sugerencias rápidas --}}
         <div id="sf-chatbot-suggestions" class="sf-chatbot-suggestions">
-            <button type="button" class="sf-suggestion-chip" data-query="Â¿CÃ³mo hago un pedido en SuperFast?">
-                ðŸ›’ Â¿CÃ³mo hacer un pedido?
+            <button type="button" class="sf-suggestion-chip" data-query="¿Cómo hago un pedido en SuperFast?">
+                🛒 ¿Cómo hacer un pedido?
             </button>
-            <button type="button" class="sf-suggestion-chip" data-query="Â¿CÃ³mo puedo registrar mi negocio o restaurante?">
-                ðŸª Registrar negocio
+            <button type="button" class="sf-suggestion-chip" data-query="¿Cómo puedo registrar mi negocio o restaurante?">
+                🏪 Registrar negocio
             </button>
-            <button type="button" class="sf-suggestion-chip" data-query="Â¿CuÃ¡les son los mÃ©todos de pago disponibles?">
-                ðŸ’³ MÃ©todos de pago
+            <button type="button" class="sf-suggestion-chip" data-query="¿Cuáles son los métodos de pago disponibles?">
+                💳 Métodos de pago
             </button>
         </div>
 
-        {{-- rea de entrada de texto --}}
+        {{-- Área de entrada de texto --}}
         <form id="sf-chatbot-form" class="sf-chatbot-form">
             <div class="sf-chatbot-input-wrapper">
                 <input type="text"
                        id="sf-chatbot-input"
                        class="sf-chatbot-input"
-                       placeholder="Escribe tu consulta aquÃ­..."
+                       placeholder="Escribe tu consulta aquí..."
                        maxlength="500"
                        autocomplete="off"
                        required>
@@ -71,18 +71,18 @@
                 </button>
             </div>
             <div class="sf-chatbot-footer-caption">
-                <span>SuperFast AI â€¢ Backend Serverless Vercel</span>
+                <span>SuperFast AI • Asistente Oficial</span>
             </div>
         </form>
     </div>
 
-    {{-- Botn Flotante de Accin (FAB) --}}
+    {{-- Botón Flotante de Acción (FAB) --}}
     <button type="button"
             id="sf-chatbot-toggle-btn"
             class="sf-chatbot-fab"
             aria-label="Abrir asistente virtual SuperFast"
             aria-expanded="false"
-            title="Â¿Tienes preguntas? Chatea con SuperFast Bot">
+            title="¿Tienes preguntas? Chatea con SuperFast Bot">
         <span class="sf-chatbot-fab-ping"></span>
         <span class="sf-chatbot-fab-icon sf-fab-icon-chat">
             <i class="bi bi-chat-dots-fill"></i>
@@ -95,7 +95,7 @@
 
 <style>
 /* ==========================================================================
-   ESTILOS ESPECÃFICOS DEL CHATBOT SUPERFAST (AISLADOS Y ARMONIZADOS)
+   ESTILOS ESPECÍFICOS DEL CHATBOT SUPERFAST (AISLADOS Y ARMONIZADOS)
    ========================================================================== */
 .sf-chatbot-wrapper {
     position: fixed;
@@ -105,7 +105,7 @@
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
-/* Botn Flotante */
+/* Botón Flotante */
 .sf-chatbot-fab {
     position: relative;
     width: 60px;
@@ -142,6 +142,12 @@
     background-color: #22C55E;
     border: 2.5px solid #FFFFFF;
     border-radius: 50%;
+    transition: opacity 0.2s ease;
+}
+
+/* Ocultar el punto de notificación cuando el chat está abierto */
+.sf-chatbot-fab[aria-expanded="true"] .sf-chatbot-fab-ping {
+    display: none !important;
 }
 
 /* Ventana Flotante */
@@ -149,13 +155,13 @@
     position: absolute;
     bottom: 76px;
     right: 0;
-    width: 380px;
+    width: 370px;
     max-width: calc(100vw - 32px);
-    height: 540px;
-    max-height: calc(100vh - 120px);
+    height: 500px;
+    max-height: calc(100vh - 110px);
     background-color: #FFFFFF;
     border-radius: 20px;
-    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(226, 232, 240, 0.8);
+    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(226, 232, 240, 0.85);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -365,16 +371,11 @@
 /* Sugerencias */
 .sf-chatbot-suggestions {
     display: flex;
+    flex-wrap: wrap;
     gap: 6px;
-    overflow-x: auto;
     padding: 8px 14px 10px;
     background-color: #F8FAFC;
     border-top: 1px dashed #E2E8F0;
-    scrollbar-width: none;
-}
-
-.sf-chatbot-suggestions::-webkit-scrollbar {
-    display: none;
 }
 
 .sf-suggestion-chip {
@@ -388,7 +389,6 @@
     padding: 5px 11px;
     cursor: pointer;
     transition: all 0.15s ease;
-    flex-shrink: 0;
 }
 
 .sf-suggestion-chip:hover {

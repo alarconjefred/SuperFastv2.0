@@ -201,6 +201,8 @@ class SuperFastChatbot {
             .replace(/>/g, '&gt;');
 
         safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Convertir viñetas markdown (- o *) a puntos limpios
+        safe = safe.replace(/(?:^|\n)[-*]\s+(.+)/g, '<br>• $1');
         safe = safe.replace(/\n/g, '<br>');
 
         return safe;
