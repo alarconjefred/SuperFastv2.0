@@ -107,9 +107,12 @@ class ChatbotController extends Controller
                 ], 429);
             }
 
+            $remoteError = $response->json('error');
             Log::error("[SuperFast Chatbot] Vercel respondió con error HTTP {$status}: " . $response->body());
             return response()->json([
-                'error' => 'No fue posible obtener respuesta del asistente virtual en este momento.'
+                'error' => is_string($remoteError) && !empty($remoteError)
+                    ? $remoteError
+                    : 'No fue posible obtener respuesta del asistente virtual en este momento.'
             ], 502);
 
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
