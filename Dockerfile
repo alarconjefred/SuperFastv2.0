@@ -80,14 +80,18 @@ RUN composer dump-autoload --optimize --no-dev --no-interaction
 # Copiar configuraciones de servidor y scripts de inicio
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/uploads.ini /usr/local/etc/php/conf.d/uploads.ini
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 # Normalizar saltos de línea y permisos de ejecución del entrypoint
 RUN dos2unix /usr/local/bin/entrypoint.sh && chmod +x /usr/local/bin/entrypoint.sh
 
-# Ajustar permisos para www-data en storage y cache
+# Ajustar permisos para www-data en storage, cache y directorios temporales de Nginx
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache \
+    && mkdir -p /var/lib/nginx/tmp/client_body /var/lib/nginx/tmp/proxy /var/lib/nginx/tmp/fastcgi \
+    && chown -R www-data:www-data /var/lib/nginx/tmp /var/log/nginx \
+    && chmod -R 700 /var/lib/nginx/tmp
 
 # Puerto por defecto expuesto (Render asigna la variable $PORT)
 EXPOSE 80 10000

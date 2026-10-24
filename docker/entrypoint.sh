@@ -18,6 +18,13 @@ if [ -f /etc/nginx/nginx.conf ]; then
     sed -i "s/user nginx;/user www-data;/g" /etc/nginx/nginx.conf
 fi
 
+# Asegurar directorios temporales de Nginx con permisos mínimos para www-data (modo 700)
+mkdir -p /var/lib/nginx/tmp/client_body \
+         /var/lib/nginx/tmp/proxy \
+         /var/lib/nginx/tmp/fastcgi
+chown -R www-data:www-data /var/lib/nginx/tmp /var/log/nginx
+chmod -R 700 /var/lib/nginx/tmp
+
 # 2. Asegurar existencia de directorios de almacenamiento y caché
 mkdir -p storage/framework/cache/data \
          storage/framework/sessions \
